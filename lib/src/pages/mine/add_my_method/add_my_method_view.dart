@@ -30,7 +30,7 @@ class AddMyMethodPage extends StatelessWidget {
             ),
           ),
           Obx(() => _buildItemView(
-                label: StrRes.phoneNum,
+                label: StrRes.gateNum,
                 on: logic.enabledPhone.value,
                 onTap: () => logic.togglePhone(),
               )),

@@ -1,64 +1,77 @@
+
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:openim_enterprise_chat/src/addfile/loginRq.dart';
 import 'package:openim_enterprise_chat/src/common/apis.dart';
 import 'package:openim_enterprise_chat/src/core/controller/im_controller.dart';
 import 'package:openim_enterprise_chat/src/core/controller/jpush_controller.dart';
-import 'package:openim_enterprise_chat/src/pages/server_config/server_config_binding.dart';
-import 'package:openim_enterprise_chat/src/pages/server_config/server_config_view.dart';
-import 'package:openim_enterprise_chat/src/res/strings.dart';
 import 'package:openim_enterprise_chat/src/routes/app_navigator.dart';
+import 'package:openim_enterprise_chat/src/routes/app_pages.dart';
 import 'package:openim_enterprise_chat/src/utils/data_persistence.dart';
 import 'package:openim_enterprise_chat/src/utils/im_util.dart';
 import 'package:openim_enterprise_chat/src/widgets/im_widget.dart';
-import 'package:openim_enterprise_chat/src/widgets/loading_view.dart';
 
 class LoginLogic extends GetxController {
   var phoneCtrl = TextEditingController();
-  var emailCtrl = TextEditingController();
   var pwdCtrl = TextEditingController();
-  var phoneFocusNode = FocusNode();
-  var emailFocusNode = FocusNode();
-  var showAccountClearBtn = false.obs;
+  var showPhoneClearBtn = false.obs;
   var showPwdClearBtn = false.obs;
   var obscureText = true.obs;
   var agreedProtocol = true.obs;
   var imLogic = Get.find<IMController>();
+  // var callLogic = Get.find<CallController>();
   var jPushLogic = Get.find<JPushController>();
+  var loginInfo = DataPersistence.getLoginCertificate();
   var enabledLoginButton = false.obs;
-  var index = 0.obs;
-  var areaCode = "+86".obs;
 
-  login() async {
-    if (index.value == 0 && !IMUtil.isMobile(phoneCtrl.text)) {
-      IMWidget.showToast(StrRes.plsInputRightPhone);
-      return;
-    }
-    if (index.value == 1 && !GetUtils.isEmail(emailCtrl.text)) {
-      IMWidget.showToast(StrRes.plsInputRightEmail);
-      return;
-    }
-    LoadingView.singleton.wrap(asyncFunction: () async {
-      var suc = await _login();
-      if (suc) {
-        AppNavigator.startMain();
-      }
+  RegisterSetupSelfInfo() async{
+    Get.toNamed(AppRoutes.REGISTER_SETUP_SELF_INFO, arguments: {
+      'phoneNumber': phoneCtrl.text,
+      'areaCode': '86',
+      'verifyCode': phoneCtrl.text,
+      'password': pwdCtrl.text,
     });
   }
 
-  Future<bool> _login() async {
+  login() async {
+    if (phoneCtrl.text.isEmpty || pwdCtrl.text.isEmpty) {
+      IMWidget.showToast('请输入账号和密码');
+      return;
+    }
+    // if (!IMUtil.isMobile(phoneCtrl.text)) {
+    //   IMWidget.showToast('请输入正确的账号');
+    //   return;
+    // }
+    var state = true;//await LoginRequest(phoneCtrl.text, pwdCtrl.text);
+    if(state) {
+      // Get.toNamed(AppRoutes.REGISTER_SETUP_PWD, arguments: {
+      //   'phoneNumber': phoneCtrl.text,
+      //   'areaCode': '86',
+      //   'verifyCode': phoneCtrl.text,
+      // });
+      print('ok');
+
+      // await Future.delayed(Duration(seconds: 4));
+      var suc = await _login(phoneNumber: phoneCtrl.text, pwd: pwdCtrl.text);
+      if (state && suc) {
+        AppNavigator.startMain();
+      }else{
+        await RegisterSetupSelfInfo();}
+    }else{
+      print('no');}
+  }
+
+  Future<bool> _login(
+      {required String phoneNumber, required String pwd}) async {
     try {
-      var data = await Apis.login(
-        areaCode: areaCode.value,
-        phoneNumber: index.value == 0 ? phoneCtrl.text : null,
-        email: index.value == 1 ? emailCtrl.text : null,
-        password: pwdCtrl.text,
-      );
+      var data = await Apis.login2(phoneNumber);
       await DataPersistence.putLoginCertificate(data);
       print('---------login---------- uid: ${data.uid}, token: ${data.token}');
       await imLogic.login(data.uid, data.token);
       print('---------im login success-------');
-      jPushLogic.login(data.uid);
+      // await callLogic.login(data.uid, data.token);
+      print('---------ion login success------');
+      await jPushLogic.login(data.uid);
       print('---------jpush login success----');
       return true;
     } catch (e) {
@@ -68,7 +81,7 @@ class LoginLogic extends GetxController {
   }
 
   void register() {
-    AppNavigator.startRegister(index.value == 0 ? 'phone' : 'email');
+    AppNavigator.startRegister();
   }
 
   void toggleEye() {
@@ -82,56 +95,29 @@ class LoginLogic extends GetxController {
   @override
   void onReady() {
     phoneCtrl.addListener(() {
-      showAccountClearBtn.value = phoneCtrl.text.isNotEmpty;
-      _changeLoginButtonStatus();
-    });
-    emailCtrl.addListener(() {
-      showAccountClearBtn.value = emailCtrl.text.isNotEmpty;
+      showPhoneClearBtn.value = phoneCtrl.text.isNotEmpty;
       _changeLoginButtonStatus();
     });
     pwdCtrl.addListener(() {
       showPwdClearBtn.value = pwdCtrl.text.isNotEmpty;
       _changeLoginButtonStatus();
     });
+
+    if (null != loginInfo && loginInfo!.uid.isNotEmpty) {
+      phoneCtrl.text = loginInfo!.uid;
+    }
     super.onReady();
   }
 
   void _changeLoginButtonStatus() {
-    enabledLoginButton.value = pwdCtrl.text.isNotEmpty &&
-        (phoneCtrl.text.isNotEmpty || emailCtrl.text.isNotEmpty);
-  }
-
-  void toServerConfig() {
-    Get.to(() => ServerConfigPage(), binding: ServerConfigBinding());
+    enabledLoginButton.value =
+        phoneCtrl.text.isNotEmpty && pwdCtrl.text.isNotEmpty;
   }
 
   @override
   void onClose() {
     phoneCtrl.dispose();
     pwdCtrl.dispose();
-    emailCtrl.dispose();
-    phoneFocusNode.dispose();
-    emailFocusNode.dispose();
     super.onClose();
-  }
-
-  void switchTab(index) {
-    // FocusScope.of(Get.context!).requestFocus(FocusNode());
-    this.index.value = index;
-    phoneCtrl.clear();
-    emailCtrl.clear();
-    pwdCtrl.clear();
-    if (index == 0) {
-      emailFocusNode.unfocus();
-      phoneFocusNode.requestFocus();
-    } else {
-      phoneFocusNode.unfocus();
-      emailFocusNode.requestFocus();
-    }
-  }
-
-  void openCountryCodePicker() async {
-    String? code = await IMWidget.showCountryCodePicker();
-    if (null != code) areaCode.value = code;
   }
 }

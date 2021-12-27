@@ -1,9 +1,11 @@
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_openim_sdk/flutter_openim_sdk.dart';
 import 'package:flutter_openim_widget/flutter_openim_widget.dart';
 import 'package:get/get.dart';
 import 'package:openim_enterprise_chat/src/common/apis.dart';
+import 'package:openim_enterprise_chat/src/common/config.dart';
 import 'package:openim_enterprise_chat/src/core/controller/im_controller.dart';
 import 'package:openim_enterprise_chat/src/core/controller/jpush_controller.dart';
 import 'package:openim_enterprise_chat/src/res/strings.dart';
@@ -17,13 +19,14 @@ class SetupSelfInfoLogic extends GetxController {
   var nameCtrl = TextEditingController();
   var showNameClearBtn = false.obs;
   var icon = "".obs;
-  String? phoneNumber;
+  late String phoneNumber;
   String? areaCode;
   String? email;
   late String verifyCode;
   late String password;
   var avatarIndex = 0.obs;
-
+  static int get _platform =>
+      Platform.isAndroid ? IMPlatform.android : IMPlatform.ios;
   // final ImagePicker _picker = ImagePicker();
 
   @override
@@ -55,12 +58,11 @@ class SetupSelfInfoLogic extends GetxController {
   }
 
   _login() async {
-    var data = await Apis.register(
-      areaCode: areaCode,
-      phoneNumber: phoneNumber,
-      email: email,
-      password: password,
-      verificationCode: verifyCode,
+    var data = await Apis.register2(
+      secret: Config.secret,
+      platform: _platform,
+      uid: phoneNumber,
+      name: nameCtrl.text,
     );
 
     var uid = data.uid;

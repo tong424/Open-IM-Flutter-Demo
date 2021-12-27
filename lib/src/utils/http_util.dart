@@ -81,7 +81,7 @@ class HttpUtil {
       }
     } catch (error) {
       if (error is DioError) {
-        IMWidget.showToast(error.response.toString());
+        // IMWidget.showToast(error.response.toString());
       } else {
         IMWidget.showToast(error.toString());
       }

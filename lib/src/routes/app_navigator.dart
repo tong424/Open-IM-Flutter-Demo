@@ -11,9 +11,10 @@ class AppNavigator {
     Get.offAllNamed(AppRoutes.LOGIN);
   }
 
-  static void startRegister(String way) {
-    Get.toNamed(AppRoutes.REGISTER, arguments: {'registerWay': way});
+  static void startRegister() {
+    Get.toNamed(AppRoutes.REGISTER);
   }
+
 
   static void startRegisterVerifyPhoneOrEmail({
     String? email,

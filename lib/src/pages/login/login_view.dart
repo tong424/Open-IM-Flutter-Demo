@@ -34,38 +34,26 @@ class LoginPage extends StatelessWidget {
                 Positioned(
                   top: 146.h,
                   left: 40.w,
-                  child: GestureDetector(
-                    onDoubleTap: () => logic.toServerConfig(),
-                    behavior: HitTestBehavior.translucent,
-                    child: Text(
-                      StrRes.welcomeUse,
-                      style: PageStyle.ts_333333_32sp,
-                    ),
+                  child: Text(
+                    StrRes.welcomeUse,
+                    style: PageStyle.ts_333333_32sp,
                   ),
                 ),
                 Positioned(
                   top: 229.h,
                   left: 40.w,
                   width: 295.w,
-                  child: Obx(() => PhoneEmailInputBox(
-                        index: logic.index.value,
-                        onChanged: (i) => logic.switchTab(i),
-                        onAreaCode: () => logic.openCountryCodePicker(),
-                        phoneController: logic.phoneCtrl,
-                        emailController: logic.emailCtrl,
-                        emailFocusNode: logic.emailFocusNode,
-                        phoneFocusNode: logic.phoneFocusNode,
-                        labelStyle: PageStyle.ts_333333_14sp,
-                        labelSelectedStyle: PageStyle.ts_1D6BED_14sp,
-                        hintStyle: PageStyle.ts_333333_opacity40p_18sp,
-                        textStyle: PageStyle.ts_333333_18sp,
-                        codeStyle: PageStyle.ts_333333_18sp,
-                        code: logic.areaCode.value,
-                        showClearBtn: logic.showAccountClearBtn.value,
-                        arrowColor: PageStyle.c_333333,
-                        clearBtnColor: PageStyle.c_333333,
-                        indicatorColor: PageStyle.c_1D6BED,
-                      )),
+                  child: Obx(() => GateInputBox(
+                    controller: logic.phoneCtrl,
+                    labelStyle: PageStyle.ts_333333_14sp,
+                    hintStyle: PageStyle.ts_333333_opacity40p_18sp,
+                    textStyle: PageStyle.ts_333333_18sp,
+                    codeStyle: PageStyle.ts_333333_18sp,
+                    code: '+86',
+                    showClearBtn: logic.showPhoneClearBtn.value,
+                    arrowColor: PageStyle.c_333333,
+                    clearBtnColor: PageStyle.c_333333,
+                  )),
                 ),
                 Positioned(
                   top: 343.h,
@@ -83,31 +71,31 @@ class LoginPage extends StatelessWidget {
                         eyesBtnColor: PageStyle.c_333333,
                       )),
                 ),
-                Positioned(
-                  top: 419.h,
-                  left: 40.w,
-                  child: GestureDetector(
-                    behavior: HitTestBehavior.translucent,
-                    child: Text(
-                      StrRes.forgetPwd,
-                      style: PageStyle.ts_333333_12sp,
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: 419.h,
-                  right: 40.w,
-                  child: GestureDetector(
-                    onTap: () => logic.register(),
-                    behavior: HitTestBehavior.translucent,
-                    child: Obx(() => Text(
-                          logic.index.value == 0
-                              ? StrRes.phoneRegister
-                              : StrRes.emailRegister,
-                          style: PageStyle.ts_1D6BED_12sp,
-                        )),
-                  ),
-                ),
+                // Positioned(
+                //   top: 419.h,
+                //   left: 40.w,
+                //   child: GestureDetector(
+                //     behavior: HitTestBehavior.translucent,
+                //     child: Text(
+                //       StrRes.forgetPwd,
+                //       style: PageStyle.ts_333333_12sp,
+                //     ),
+                //   ),
+                // ),
+                // Positioned(
+                //   top: 419.h,
+                //   right: 40.w,
+                //   child: GestureDetector(
+                //     onTap: () => logic.register(),
+                //     behavior: HitTestBehavior.translucent,
+                //     child: Obx(() => Text(
+                //           logic.index.value == 0
+                //               ? StrRes.phoneRegister
+                //               : StrRes.emailRegister,
+                //           style: PageStyle.ts_1D6BED_12sp,
+                //         )),
+                //   ),
+                // ),
                 Positioned(
                   top: 520.h,
                   left: 40.w,

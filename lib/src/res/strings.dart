@@ -18,9 +18,9 @@ class TranslationService extends Translations {
 class StrRes {
   static get welcomeUse => 'welcomeUse'.tr;
 
-  static get phoneNum => 'phoneNum'.tr;
+  static get gateNum => 'gateNum'.tr;
 
-  static get plsInputPhone => 'plsInputPhone'.tr;
+  static get plsInputGate => 'plsInputGate'.tr;
 
   static get pwd => 'pwd'.tr;
 

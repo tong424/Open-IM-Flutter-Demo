@@ -49,7 +49,7 @@ class PhoneInputBox extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            inputWay == InputWay.phone ? StrRes.phoneNum : StrRes.email,
+            inputWay == InputWay.phone ? StrRes.gateNum : StrRes.email,
             style: labelStyle,
           ),
           SizedBox(height: 10.h),
@@ -85,7 +85,7 @@ class PhoneInputBox extends StatelessWidget {
             : null,
         decoration: InputDecoration(
           hintText: inputWay == InputWay.phone
-              ? StrRes.plsInputPhone
+              ? StrRes.plsInputGate
               : StrRes.plsInputEmail,
           hintStyle: hintStyle,
           isDense: true,

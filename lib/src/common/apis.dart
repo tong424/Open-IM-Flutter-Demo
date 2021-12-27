@@ -89,21 +89,21 @@ class Apis {
     }
   }
 
-  static Future<bool> register2(
-      {required String uid, required String name}) async {
+  static Future<LoginCertificate> register2(
+      {required String uid, required String name, secret, platform}) async {
     try {
-      await HttpUtil.post(Urls.register2, data: {
+      var data = await HttpUtil.post(Urls.register2, data: {
         'secret': Config.secret,
         'platform': _platform,
         'uid': uid,
         'name': name,
       });
-      return true;
+      return LoginCertificate.fromJson(data);
     } catch (e) {
       print('e:$e');
       // var error = e as DioError;
       // IMWidget.showToast('注册失败，请联系管理员:${error.response}');
-      return false;
+      return Future.error(e);
     }
   }
 

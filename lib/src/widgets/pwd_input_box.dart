@@ -73,55 +73,59 @@ class PwdInputBox extends StatelessWidget {
 
   /// [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))]
   Widget _textField() => TextField(
-        controller: controller,
-        // keyboardType: TextInputType.phone,
-        textInputAction: TextInputAction.next,
-        style: textStyle,
-        obscureText: obscureText,
-        inputFormatters: inputFormatters,
-        maxLength: maxLength,
-        autofocus: autofocus,
-        decoration: InputDecoration(
-          hintText: StrRes.plsInputPwd,
-          hintStyle: hintStyle,
-          isDense: true,
-          contentPadding: EdgeInsets.all(0),
-          border: InputBorder.none,
-        ),
-      );
+    controller: controller,
+    keyboardType: TextInputType.emailAddress,
+    textInputAction: TextInputAction.next,
+    style: textStyle,
+    obscureText: obscureText,
+    inputFormatters: inputFormatters,
+    maxLength: maxLength,
+    autofocus: autofocus,
+    decoration: InputDecoration(
+        hintText: StrRes.plsInputPwd,
+        hintStyle: hintStyle,
+        isDense: true,
+        contentPadding: EdgeInsets.all(0),
+        border: InputBorder.none,
+        icon: new Icon(
+          Icons.lock,
+          color: Colors.grey,
+        )
+    ),
+  );
 
   Widget _clearBtn() => Visibility(
-        visible: showClearBtn,
-        child: GestureDetector(
-          onTap: () {
-            controller.clear();
-          },
-          behavior: HitTestBehavior.translucent,
-          child: Container(
-            // padding: EdgeInsets.all(7.w),
-            child: Image.asset(
-              ImageRes.ic_clearInput,
-              color: clearBtnColor,
-              width: 14.w,
-              height: 14.w,
-            ),
-          ),
+    visible: showClearBtn,
+    child: GestureDetector(
+      onTap: () {
+        controller.clear();
+      },
+      behavior: HitTestBehavior.translucent,
+      child: Container(
+        // padding: EdgeInsets.all(7.w),
+        child: Image.asset(
+          ImageRes.ic_clearInput,
+          color: clearBtnColor,
+          width: 14.w,
+          height: 14.w,
         ),
-      );
+      ),
+    ),
+  );
 
   Widget _eyesBtn() => GestureDetector(
-        onTap: () {
-          onClickEyesBtn?.call();
-        },
-        behavior: HitTestBehavior.translucent,
-        child: Container(
-          // padding: EdgeInsets.all(7.w),
-          child: Image.asset(
-            obscureText ? ImageRes.ic_eyeClose : ImageRes.ic_eyeOpen,
-            color: eyesBtnColor,
-            width: 20.w,
-            height: 12.w,
-          ),
-        ),
-      );
+    onTap: () {
+      onClickEyesBtn?.call();
+    },
+    behavior: HitTestBehavior.translucent,
+    child: Container(
+      // padding: EdgeInsets.all(7.w),
+      child: Image.asset(
+        obscureText ? ImageRes.ic_eyeClose : ImageRes.ic_eyeOpen,
+        color: eyesBtnColor,
+        width: 20.w,
+        height: 12.w,
+      ),
+    ),
+  );
 }

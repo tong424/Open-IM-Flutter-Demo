@@ -39,7 +39,7 @@ class MyInfoPage extends StatelessWidget {
               onTap: () => logic.setupUserName(),
             ),
             _buildItemView(
-              label: StrRes.phoneNum,
+              label: StrRes.gateNum,
               value: imLogic.userInfo.value.mobile,
             ),
             _buildItemView(
